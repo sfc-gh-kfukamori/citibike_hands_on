@@ -129,7 +129,7 @@ FILE_FORMAT = my_ff
 PATTERN = '.*csv.*';
 
 ///ロードに要した時間のメモ
-// 39 sec
+// sec
 
 //テーブルの確認
 select * from trips limit 10;
@@ -152,7 +152,7 @@ copy into trips from @citibike_trips
 file_format= my_ff;
 
 //要した時間のメモ
-// 17 sec
+// sec
 
 //テーブルにデータが入ったことの確認
 select * from trips limit 20;
@@ -160,8 +160,10 @@ select * from trips limit 20;
 //テーブルのレコード数をカウント
 select count(*) from trips;
 
+//ロード中のデータ変換
+//https://docs.snowflake.com/ja/user-guide/data-load-transform
 
-//例：Snowpipeを使ったデータロード
+//Snowpipeを使ったデータロード
 //Snowpipe：オブジェクトストレージにファイルがPutされたことをTriggerとして自動ロード
 -- CREATE PIPE kfukamori_pipe
 -- AS
@@ -179,7 +181,8 @@ select count(*) from trips;
 //分析クエリを発行して、統計情報を確認
 
 //各時間の走行回数、平均走行時間、平均走行距離が表示
-//実行時間をちぇっく！　実行時間：
+//実行時間をチェック！　
+//実行時間：
 select date_trunc('hour', starttime) as "date",
 count(*) as "num trips",
 avg(tripduration)/60 as "avg duration (mins)",
@@ -201,13 +204,10 @@ group by 1 order by 1;
 //クエリリザルトキャッシュが利いている！！
 
 
-//分析クエリ２
-//月毎のTrips数の集計
-select
-monthname(starttime) as "month",
-count(*) as "num trips"
-from trips
-group by 1 order by 2 desc;
+//分析クエリをInline Copilotを使って作成してみよう。
+//Cntrl+Iを押下
+//月毎のトリップ数を集計して大きい順に並べて
+
 
 /************************************************************************************************
 * ゼロコピークローン
@@ -300,7 +300,7 @@ select * from json_weather_data_view
 order by observation_time desc;
 
 //特定の日のみを表示
-//Observation_timeを月でTruncして2018年1月のみのデータを表示
+//Observation_timeを月でTruncして2019年3月のみのデータを表示
 select * from json_weather_data_view
 where date_trunc('month',observation_time) = '2019-03-01'
 limit 20;
@@ -343,16 +343,16 @@ select * from json_weather_data limit 10;
 //json_weather_dataテーブルを書き換え
 //クエリIDを記録しておこう
 //Query ID: 
-update trips set start_station_name = 'oops';
+update citibike.public.trips set start_station_name = 'oops';
 
 //書き換わったことを確認
-select * from trips limit 10;
+select * from citibike.public.trips limit 10;
 
 //書き換わったことを確認（その２）
 select
 start_station_name as "station",
 count(*) as "rides"
-from trips
+from citibike.public.trips
 group by 1
 order by 2 desc
 limit 20;
@@ -365,7 +365,7 @@ limit 20;
 //タイムトラベルその２
 //特定のクエリIDの実行前の状態をリストア
 create or replace table trips as
-(select * from trips before (statement => '<Query_ID>'));
+(select * from citibike.public.trips before (statement => '<Query_ID>'));
 
 //リストアされていることを確認
 select
@@ -411,7 +411,7 @@ group by 1 order by 2 desc;
 
 
 -- データの確認
--- Cloudyの時のTrip数：
+-- Cloudyの時のTrip数：676990
 SELECT *
 FROM trips_by_weather_summary
 where conditions = 'Cloudy';
@@ -453,6 +453,8 @@ SELECT * FROM citibike.public.user_reviews;
 
 --スライド：Cortex AIASQL
 
+//ALTER ACCOUNT SET CORTEX_ENABLED_CROSS_REGION = 'ANY_REGION';
+
 //Complete関数
 SELECT
   *,
@@ -462,8 +464,7 @@ SELECT
     '対象レビューは次のとおり。',REVIEW_TEXT) -- AIへの指示（プロンプト）。及び目的のカラム
   ) AS extracted_word
 FROM
-  citibike.public.user_reviews; 
-
+  citibike.public.user_reviews;
 
 SELECT
   *,
@@ -475,7 +476,7 @@ SELECT
     '2. 感謝または謝罪',
     '3. 具体的な改善案',
     '対象のレビューは次のとおり。', REVIEW_TEXT) -- AIへの指示（プロンプト）。及び目的のカラム
-  ) AS extracted_word
+  ) AS auto_reply
 FROM
   citibike.public.user_reviews; 
 
