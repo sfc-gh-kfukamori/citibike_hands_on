@@ -92,7 +92,7 @@ list @citibike_trips;
 
 
 //ファイルフォーマットの作成
-create or replace file format csv type='csv'
+create or replace file format my_ff type='csv'
   compression = 'auto' 
   field_delimiter = ',' --各項目（列）がカンマ (,) で区切られていることを指定
   record_delimiter = '\n' --各レコード（行）が改行コード (\n) で区切られていることを指定
@@ -125,7 +125,7 @@ show warehouses;
 //Snowflakeへのデータロード
 //Copy intoコマンドの利用（ステージ上のファイルをTripsテーブルへロード）
 COPY INTO trips FROM @citibike_trips 
-FILE_FORMAT = CSV
+FILE_FORMAT = my_ff
 PATTERN = '.*csv.*';
 
 ///ロードに要した時間のメモ
@@ -149,7 +149,7 @@ show warehouses;
 
 //再度データをCitibikeテーブルへロード
 copy into trips from @citibike_trips
-file_format=CSV;
+file_format= my_ff;
 
 //要した時間のメモ
 // 17 sec
