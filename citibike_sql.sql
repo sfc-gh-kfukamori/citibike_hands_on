@@ -124,9 +124,8 @@ show warehouses;
 
 //Snowflakeへのデータロード
 //Copy intoコマンドの利用（ステージ上のファイルをTripsテーブルへロード）
-//実行できるかな、、、、？ -> Cortex inline copilotをつかってみよう。
-cCOPY INTO trips FROM citibike_trips 
-FILE_FORMAT = (TYPE = CSV)
+COPY INTO trips FROM @citibike_trips 
+FILE_FORMAT = CSV
 PATTERN = '.*csv.*';
 
 ///ロードに要した時間のメモ
