@@ -68,7 +68,6 @@ def get_data_insights(user_prompt: str, data_df: pd.DataFrame) -> str:
     """
     Snowflake Cortex Completeを使用して、データに関するユーザーの質問に回答する。
     """
-    completion_model = "claude-3-7-sonnet"
     
     # プロンプトのテンプレート
     prompt_template = f"""
@@ -184,6 +183,12 @@ elif selected_option == "💬 Natural Language Query (Cortex)":
 
     # Cortexに渡すためのデータをロード
     summary_df = load_hourly_data()
+
+    completion_model = st.selectbox("使用するモデルを選択してください", [
+        "openai-gpt-4.1","openai-o4-mini","claude-3-7-sonnet", "claude-3-5-sonnet", "snowflake-arctic", "mistral-large", "mistral-large2", "reka-flash",
+        "reka-core","mixtral-8x7b","llama2-70b-chat",
+        "llama3-8b","llama3-70b","llama3.1-70b","mistral-7b","gemma-7b","llama3.2-1b","llama3.2-3b"
+    ])
 
     user_question = st.text_area("Your question:", height=100, placeholder="e.g., Which hours are the busiest for bike trips? What is the average trip duration overall?")
 
