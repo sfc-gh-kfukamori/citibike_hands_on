@@ -39,7 +39,8 @@ MODEL_CANDIDATES = [
     "claude-4-sonnet",
     "claude-3-7-sonnet",
     "mistral-large2",
-    "openai-gpt-4.1"
+    "openai-gpt-4.1",
+    "snowflake-arctic"
 ]
 
 # =========================================
