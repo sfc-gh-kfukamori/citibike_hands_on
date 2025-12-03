@@ -380,13 +380,7 @@ create or replace table citibike.public.trips as
 (select * from citibike.public.trips before (statement => '01c0c919-0003-05df-0003-207e000128ea'));
 
 //リストアされていることを確認
-select
-start_station_name as "station",
-count(*) as "rides"
-from trips
-group by 1
-order by 2 desc
-limit 20;
+select * from citibike.public.trips limit 10;
 
 
 /************************************************************************************************
