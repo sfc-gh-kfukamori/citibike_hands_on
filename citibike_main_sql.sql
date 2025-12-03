@@ -524,7 +524,7 @@ where
 
 //利用規約ファイル格納のためのステージを作成
 CREATE OR REPLACE STAGE citibike.public.terms_stage
-  ENCRYPTION = (TYPE = 'SNOWFLAKE_SSE');
+  ENCRYPTION = (TYPE = 'SNOWFLAKE_SSE'); --Server Side Encryption
 
 
 //Document格納先テーブルの作成
