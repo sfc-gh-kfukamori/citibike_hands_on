@@ -514,7 +514,7 @@ select
 from
   citibike.public.user_reviews
 where
-  ai_filter(prompt('The review from a customer is related to pricing：{0}', SNOWFLAKE.CORTEX.TRANSLATE(review_text, 'ja', 'en'))) = True
+  ai_filter(prompt('The review from a customer is mentioned about pricing. the review：{0}', SNOWFLAKE.CORTEX.TRANSLATE(review_text, 'ja', 'en'))) = True
 ;
 
 
