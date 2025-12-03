@@ -526,6 +526,7 @@ where
 CREATE OR REPLACE STAGE citibike.public.terms_stage
   ENCRYPTION = (TYPE = 'SNOWFLAKE_SSE'); --Server Side Encryption
 
+//Docxの利用規約ファイルをステージにアップロードしよう
 
 //Document格納先テーブルの作成
 CREATE OR REPLACE TABLE citibike.public.terms_table (
@@ -537,7 +538,7 @@ CREATE OR REPLACE TABLE citibike.public.terms_table (
   loaded_at     TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP()
 );
 
-//Docxの利用規約ファイルをステージにアップロードしよう
+
 
 //AI_PARSE_DOCUMENTによるPARSE結果の確認
 SELECT
